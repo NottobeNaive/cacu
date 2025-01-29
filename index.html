@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+</head>
+<body>
+    <h1>Calculator</h1>
+    <input type="number" id="specificVal" placeholder="Enter SPECIFIC_VAL">
+    <button onclick="calculate()">Calculate</button>
+    <div id="results"></div>
+    
+    <script>
+        const diameters = [86, 172, 257, 343, 429, 514, 600, 706, 878, 2195, 3688, 4394, 5532, 6238, 7727, 9288];
+        const multipliers = [61.5, 122, 177.5, 239, 299.5, 355, 416.5, 480, 602, 1453, 2424, 2904, 3660, 4140, 5113, 6079];
+
+        function calculate() {
+            const specificVal = document.getElementById('specificVal').value;
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Clear previous results
+
+            diameters.forEach((diameter, index) => {
+                const result = multipliers[index] * specificVal;
+                const resultText = `Dia ${diameter} = ${result} Ks`;
+                
+                const p = document.createElement('p');
+                p.textContent = resultText;
+
+                const button = document.createElement('button');
+                button.textContent = 'Copy';
+                button.onclick = () => navigator.clipboard.writeText(resultText);
+
+                p.appendChild(button);
+                resultsDiv.appendChild(p);
+            });
+        }
+    </script>
+</body>
+</html>
