@@ -10,6 +10,7 @@
     <input type="number" id="specificVal" placeholder="Enter SPECIFIC_VAL">
     <button onclick="calculate()">Calculate</button>
     <div id="results"></div>
+    <button id="copyButton" style="display: none;" onclick="copyResults()">Copy All</button>
     
     <script>
         const diameters = [86, 172, 257, 343, 429, 514, 600, 706, 878, 2195, 3688, 4394, 5532, 6238, 7727, 9288];
@@ -18,22 +19,29 @@
         function calculate() {
             const specificVal = document.getElementById('specificVal').value;
             const resultsDiv = document.getElementById('results');
+            const copyButton = document.getElementById('copyButton');
             resultsDiv.innerHTML = ''; // Clear previous results
 
+            let resultsText = "";
+
             diameters.forEach((diameter, index) => {
-                const result = multipliers[index] * specificVal;
+                const result = Math.round((multipliers[index] * specificVal) / 100) * 100;
                 const resultText = `Dia ${diameter} = ${result} Ks`;
-                
+                resultsText += resultText + "\n";
+
                 const p = document.createElement('p');
                 p.textContent = resultText;
-
-                const button = document.createElement('button');
-                button.textContent = 'Copy';
-                button.onclick = () => navigator.clipboard.writeText(resultText);
-
-                p.appendChild(button);
                 resultsDiv.appendChild(p);
             });
+
+            copyButton.style.display = "block";
+            copyButton.setAttribute('data-results', resultsText.trim());
+        }
+
+        function copyResults() {
+            const copyButton = document.getElementById('copyButton');
+            const resultsText = copyButton.getAttribute('data-results');
+            navigator.clipboard.writeText(resultsText);
         }
     </script>
 </body>
