@@ -5,12 +5,9 @@ multipliers = [61.5, 122, 177.5, 239, 299.5, 355, 416.5, 480, 602, 1453, 2424, 2
 # Get user input for SPECIFIC_VAL
 SPECIFIC_VAL = int(input("Enter SPECIFIC_VAL: "))
 
-# Calculate the results
-results = {diameter: multiplier * SPECIFIC_VAL for diameter, multiplier in zip(diameters, multipliers)}
+# Calculate the results and round to the nearest hundred
+results = {diameter: round(multiplier * SPECIFIC_VAL / 100) * 100 for diameter, multiplier in zip(diameters, multipliers)}
 
-# Print the results with a copy button (in a formatted way for further use)
+# Print the results
 for diameter, value in results.items():
-    print(f"Dia {diameter} = {value} Ks")
-
-# Copy button functionality can't be implemented in Python directly,
-# but you can create a simple HTML interface for this.
+    print(f"Dia {diameter} = {value} Ks") 
