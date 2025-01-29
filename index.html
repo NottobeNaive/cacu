@@ -8,10 +8,41 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            overflow: hidden;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        input, button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #specificVal {
+            width: 80%;
+            max-width: 300px;
+        }
+
+        button {
             background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(0,255,0,1) 50%, rgba(0,0,255,1) 100%);
             background-size: 300% 300%;
-            animation: gradient 10s ease infinite;
+            animation: gradient 3s ease infinite;
+            color: white;
+            width: 80%;
+            max-width: 300px;
         }
 
         @keyframes gradient {
@@ -20,22 +51,10 @@
             100% { background-position: 0% 50%; }
         }
 
-        h1 {
-            color: white;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        input, button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px;
-            font-size: 16px;
-        }
-
         #results {
-            color: white;
+            color: #333;
             text-align: center;
+            margin-top: 20px;
         }
 
         #copyButton {
@@ -43,9 +62,14 @@
             margin: 20px auto;
             padding: 10px;
             font-size: 16px;
-            background-color: white;
+            background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(0,255,0,1) 50%, rgba(0,0,255,1) 100%);
+            background-size: 300% 300%;
+            animation: gradient 3s ease infinite;
             border: none;
             cursor: pointer;
+            color: white;
+            width: 80%;
+            max-width: 300px;
         }
     </style>
 </head>
