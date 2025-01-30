@@ -6,30 +6,43 @@
     <title>Premium Calculator</title>
     <style>
         :root {
-            --bg-dark: #1a1a1a;
+            --bg-dark: rgba(0, 0, 0, 0.9);
             --text-light: #ffffff;
             --accent: #00ff88;
         }
 
         body {
             font-family: 'Arial', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-light);
             margin: 0;
             padding: 20px;
             min-height: 100vh;
+            color: var(--text-light);
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                        url('https://i.pximg.net/img-master/img/2025/01/21/20/20/39/126437666_p0_master1200.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
         .password-gate {
             max-width: 400px;
             margin: 100px auto;
             text-align: center;
+            backdrop-filter: blur(5px);
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.5);
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
             display: none;
+            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.7);
+            border-radius: 15px;
+            padding: 20px;
         }
 
         .category-tabs {
@@ -41,28 +54,30 @@
         .tab-btn {
             flex: 1;
             padding: 15px;
-            background: #2d2d2d;
+            background: rgba(45,45,45,0.8);
             border: none;
             color: white;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             transform-style: preserve-3d;
+            backdrop-filter: blur(5px);
         }
 
         .tab-btn.active {
-            background: linear-gradient(45deg, #ff0080, #ff00ff);
+            background: linear-gradient(45deg, rgba(255,0,128,0.8), rgba(255,0,255,0.8));
         }
 
         input {
             width: 100%;
             padding: 15px;
             margin: 20px 0;
-            background: #2d2d2d;
-            border: 2px solid #3d3d3d;
+            background: rgba(45,45,45,0.8);
+            border: 2px solid rgba(61,61,61,0.5);
             color: white;
             border-radius: 8px;
             font-size: 16px;
+            backdrop-filter: blur(5px);
         }
 
         .calculator-section {
@@ -85,14 +100,14 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px;
-            background: #2d2d2d;
+            background: rgba(45,45,45,0.8);
             border-radius: 8px;
-            border: 1px solid #3d3d3d;
+            border: 1px solid rgba(61,61,61,0.5);
+            backdrop-filter: blur(5px);
         }
 
-        /* 3D Fading Button Animation */
         .copy-btn {
-            background: linear-gradient(45deg, #ff0080, #ff00ff);
+            background: linear-gradient(45deg, rgba(255,0,128,0.8), rgba(255,0,255,0.8));
             border: none;
             color: white;
             padding: 8px 20px;
@@ -101,6 +116,7 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             transform: translateZ(0);
             perspective: 1000px;
+            backdrop-filter: blur(5px);
         }
 
         .copy-btn:hover {
@@ -113,17 +129,24 @@
             width: 100%;
             margin-top: 20px;
             padding: 15px;
-            background: linear-gradient(45deg, #00ff88, #00ccff);
+            background: linear-gradient(45deg, rgba(0,255,136,0.8), rgba(0,204,255,0.8));
         }
 
         @media (max-width: 480px) {
             .results {
                 grid-template-columns: 1fr;
             }
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Keep previous HTML structure unchanged -->
     <div class="password-gate">
         <input type="password" id="password" placeholder="Admin Secret">
         <button class="copy-btn" onclick="checkPassword()">Access</button>
@@ -150,7 +173,9 @@
         <button class="copy-btn copy-all" onclick="copyAllResults()">Copy All Results</button>
     </div>
 
+    <!-- Keep previous JavaScript unchanged -->
     <script>
+        // Previous JavaScript code remains exactly the same
         let currentCategory = 'diamond';
 
         function checkPassword() {
@@ -171,7 +196,6 @@
             updateResults();
         }
 
-        // Data configurations
         const calculators = {
             diamond: {
                 amounts: [86,172,257,343,429,514,600,706,878,2195,3688,4394,5532,6238,7727,9288],
@@ -226,7 +250,6 @@
             navigator.clipboard.writeText(results);
         }
 
-        // Initial calculation
         updateResults();
     </script>
 </body>
