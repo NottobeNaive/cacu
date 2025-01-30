@@ -128,10 +128,11 @@
             }
         }
 
-        // Calculator logic
-        const diaAmounts = [86,172,257,343,429,514,600,706,878,2195,3688,4394,5532,6238,7727,9288];
-        const diaPrices = [61.5,122,177.5,239,299.5,355,416.5,480,602,1453,2424,2904,3660,4140,5113,6079];
+        // Calculator data
+        const diaAmounts = [86,172,257,343,429,514,600,706,706+172,2195,3688,4394,5532,6238,7727,9288];
+        const diaPrices = [61.5,122,177.5,239,299.5,355,416.5,480,480+122,1453,2424,2424+480,3660,3660+480,3660+1453,6079];
 
+        // Event listeners
         document.getElementById('specificVal').addEventListener('input', updateResults);
 
         function updateResults() {
@@ -142,30 +143,42 @@
             diaAmounts.forEach((amount, index) => {
                 const originalPrice = diaPrices[index];
                 const calculated = Math.ceil((originalPrice * specificVal) / 100) * 100;
+                const displayValue = Math.round(calculated).toLocaleString('en-US', {useGrouping: false});
+                const fullText = `Dia ${amount} = ${displayValue} Ks`;
                 
                 const resultItem = document.createElement('div');
                 resultItem.className = 'result-item';
                 resultItem.innerHTML = `
                     <span>Dia ${amount}</span>
-                    <button class="copy-btn" onclick="copyResult(${calculated})">
-                        ${Math.round(calculated).toLocaleString('en-US', {useGrouping: false})} Ks
+                    <button class="copy-btn" data-fulltext="${fullText}">
+                        ${displayValue} Ks
                     </button>
                 `;
+                
+                // Add click listener for individual copy
+                resultItem.querySelector('.copy-btn').addEventListener('click', () => {
+                    navigator.clipboard.writeText(fullText);
+                });
+                
                 resultsContainer.appendChild(resultItem);
             });
         }
 
-        function copyResult(value) {
-            navigator.clipboard.writeText(`${value}`);
-        }
-
+        // Copy all results
         function copyAllResults() {
-            const results = Array.from(document.querySelectorAll('.copy-btn'))
-                .map(btn => btn.innerText)
+            const results = Array.from(document.querySelectorAll('.result-item'))
+                .map(item => {
+                    const amount = item.querySelector('span').textContent;
+                    const value = item.querySelector('button').textContent;
+                    return `${amount} = ${value}`;
+                })
                 .join('\n');
                 
             navigator.clipboard.writeText(results);
         }
+
+        // Initial calculation
+        updateResults();
     </script>
 </body>
 </html>
