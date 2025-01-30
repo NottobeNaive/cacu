@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diamond Calculator</title>
+    <title>Premium Calculator</title>
     <style>
         :root {
             --bg-dark: #1a1a1a;
@@ -32,6 +32,28 @@
             display: none;
         }
 
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            background: #2d2d2d;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #ff0080, #ff00ff);
+        }
+
         input {
             width: 100%;
             padding: 15px;
@@ -41,6 +63,14 @@
             color: white;
             border-radius: 8px;
             font-size: 16px;
+        }
+
+        .calculator-section {
+            display: none;
+        }
+
+        .calculator-section.active {
+            display: block;
         }
 
         .results {
@@ -60,7 +90,7 @@
             border: 1px solid #3d3d3d;
         }
 
-        /* Modern Animated Button CSS */
+        /* 3D Fading Button Animation */
         .copy-btn {
             background: linear-gradient(45deg, #ff0080, #ff00ff);
             border: none;
@@ -68,35 +98,15 @@
             padding: 8px 20px;
             border-radius: 5px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            font-weight: bold;
-        }
-
-        .copy-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255,255,255,0.4),
-                transparent
-            );
-            transition: 0.5s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateZ(0);
+            perspective: 1000px;
         }
 
         .copy-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255,0,128,0.4);
-        }
-
-        .copy-btn:hover::before {
-            left: 100%;
+            transform: translateZ(10px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(255,0,128,0.3);
+            opacity: 0.9;
         }
 
         .copy-all {
@@ -120,12 +130,29 @@
     </div>
 
     <div class="container">
-        <input type="number" id="specificVal" placeholder="Enter SPECIFIC_VAL (e.g., 75)">
-        <div class="results" id="results"></div>
+        <div class="category-tabs">
+            <button class="tab-btn active" onclick="showCategory('diamond')">Diamond</button>
+            <button class="tab-btn" onclick="showCategory('uc')">UC</button>
+        </div>
+        
+        <input type="number" id="specificVal" placeholder="Enter SPECIFIC_VAL (e.g., 4000)">
+        
+        <!-- Diamond Calculator -->
+        <div id="diamond-calculator" class="calculator-section active">
+            <div class="results" id="diamond-results"></div>
+        </div>
+
+        <!-- UC Calculator -->
+        <div id="uc-calculator" class="calculator-section">
+            <div class="results" id="uc-results"></div>
+        </div>
+
         <button class="copy-btn copy-all" onclick="copyAllResults()">Copy All Results</button>
     </div>
 
     <script>
+        let currentCategory = 'diamond';
+
         function checkPassword() {
             if(document.getElementById('password').value === 'Hworld') {
                 document.querySelector('.container').style.display = 'block';
@@ -135,26 +162,47 @@
             }
         }
 
-        const diaAmounts = [86,172,257,343,429,514,600,706,878,2195,3688,4394,5532,6238,7727,9288];
-        const diaPrices = [61.5,122,177.5,239,299.5,355,416.5,480,602,1453,2424,2904,3660,4140,5113,6079];
+        function showCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.calculator-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(`${category}-calculator`).classList.add('active');
+            document.querySelector(`button[onclick="showCategory('${category}')"]`).classList.add('active');
+            updateResults();
+        }
+
+        // Data configurations
+        const calculators = {
+            diamond: {
+                amounts: [86,172,257,343,429,514,600,706,878,2195,3688,4394,5532,6238,7727,9288],
+                prices: [61.5,122,177.5,239,299.5,355,416.5,480,602,1453,2424,2904,3660,4140,5113,6079],
+                calculate: (val, price) => Math.ceil((price * val) / 100) * 100
+            },
+            uc: {
+                amounts: [60,325,660,1800,3850,8100],
+                prices: [0.84,4.2,8.4,21,42,84],
+                calculate: (val, price) => Math.floor(price * val)
+            }
+        };
 
         document.getElementById('specificVal').addEventListener('input', updateResults);
 
         function updateResults() {
             const specificVal = parseFloat(document.getElementById('specificVal').value) || 0;
-            const resultsContainer = document.getElementById('results');
+            const config = calculators[currentCategory];
+            const resultsContainer = document.getElementById(`${currentCategory}-results`);
             resultsContainer.innerHTML = '';
 
-            diaAmounts.forEach((amount, index) => {
-                const originalPrice = diaPrices[index];
-                const calculated = Math.ceil((originalPrice * specificVal) / 100) * 100;
-                const displayValue = Math.round(calculated).toLocaleString('en-US', {useGrouping: false});
+            config.amounts.forEach((amount, index) => {
+                const price = config.prices[index];
+                const calculated = config.calculate(specificVal, price);
+                const displayValue = calculated.toLocaleString('en-US', {useGrouping: false});
                 
                 const resultItem = document.createElement('div');
                 resultItem.className = 'result-item';
                 resultItem.innerHTML = `
-                    <span>Dia ${amount}</span>
-                    <button class="copy-btn" onclick="copySingleResult('Dia ${amount} = ${displayValue} Ks')">
+                    <span>${currentCategory === 'diamond' ? 'Dia' : 'UC'} ${amount}</span>
+                    <button class="copy-btn" onclick="copySingleResult('${currentCategory === 'diamond' ? 'Dia' : 'UC'} ${amount} = ${displayValue} Ks')">
                         ${displayValue} Ks
                     </button>
                 `;
@@ -167,7 +215,7 @@
         }
 
         function copyAllResults() {
-            const results = Array.from(document.querySelectorAll('.result-item'))
+            const results = Array.from(document.querySelectorAll(`#${currentCategory}-results .result-item`))
                 .map(item => {
                     const amount = item.querySelector('span').textContent.trim();
                     const value = item.querySelector('button').textContent.trim();
