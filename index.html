@@ -60,6 +60,7 @@
             border: 1px solid #3d3d3d;
         }
 
+        /* Modern Animated Button CSS */
         .copy-btn {
             background: linear-gradient(45deg, #ff0080, #ff00ff);
             border: none;
@@ -67,28 +68,35 @@
             padding: 8px 20px;
             border-radius: 5px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            font-weight: bold;
         }
 
-        .copy-btn::after {
+        .copy-btn::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, 
-                transparent 25%,
-                rgba(255,255,255,0.2) 50%,
-                transparent 75%);
-            animation: shine 2s infinite;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,0.4),
+                transparent
+            );
+            transition: 0.5s;
         }
 
-        @keyframes shine {
-            0% { transform: translateX(-150%) rotate(45deg); }
-            100% { transform: translateX(150%) rotate(45deg); }
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255,0,128,0.4);
+        }
+
+        .copy-btn:hover::before {
+            left: 100%;
         }
 
         .copy-all {
@@ -118,7 +126,6 @@
     </div>
 
     <script>
-        // Password protection
         function checkPassword() {
             if(document.getElementById('password').value === 'Hworld') {
                 document.querySelector('.container').style.display = 'block';
@@ -128,11 +135,9 @@
             }
         }
 
-        // Calculator data
-        const diaAmounts = [86,172,257,343,429,514,600,706,706+172,2195,3688,4394,5532,6238,7727,9288];
-        const diaPrices = [61.5,122,177.5,239,299.5,355,416.5,480,480+122,1453,2424,2424+480,3660,3660+480,3660+1453,6079];
+        const diaAmounts = [86,172,257,343,429,514,600,706,878,2195,3688,4394,5532,6238,7727,9288];
+        const diaPrices = [61.5,122,177.5,239,299.5,355,416.5,480,602,1453,2424,2904,3660,4140,5113,6079];
 
-        // Event listeners
         document.getElementById('specificVal').addEventListener('input', updateResults);
 
         function updateResults() {
@@ -144,32 +149,28 @@
                 const originalPrice = diaPrices[index];
                 const calculated = Math.ceil((originalPrice * specificVal) / 100) * 100;
                 const displayValue = Math.round(calculated).toLocaleString('en-US', {useGrouping: false});
-                const fullText = `Dia ${amount} = ${displayValue} Ks`;
                 
                 const resultItem = document.createElement('div');
                 resultItem.className = 'result-item';
                 resultItem.innerHTML = `
                     <span>Dia ${amount}</span>
-                    <button class="copy-btn" data-fulltext="${fullText}">
+                    <button class="copy-btn" onclick="copySingleResult('Dia ${amount} = ${displayValue} Ks')">
                         ${displayValue} Ks
                     </button>
                 `;
-                
-                // Add click listener for individual copy
-                resultItem.querySelector('.copy-btn').addEventListener('click', () => {
-                    navigator.clipboard.writeText(fullText);
-                });
-                
                 resultsContainer.appendChild(resultItem);
             });
         }
 
-        // Copy all results
+        function copySingleResult(text) {
+            navigator.clipboard.writeText(text);
+        }
+
         function copyAllResults() {
             const results = Array.from(document.querySelectorAll('.result-item'))
                 .map(item => {
-                    const amount = item.querySelector('span').textContent;
-                    const value = item.querySelector('button').textContent;
+                    const amount = item.querySelector('span').textContent.trim();
+                    const value = item.querySelector('button').textContent.trim();
                     return `${amount} = ${value}`;
                 })
                 .join('\n');
